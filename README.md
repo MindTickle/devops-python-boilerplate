@@ -11,3 +11,8 @@ This project comes preconfigured with the following:
 * Flask Server
 * `heimdall.json` and `build.sh`
 
+
+## Running Locally via Docker
+
+* `docker build -t devops-python-boilerplate .`
+* `docker run -p 8000:8000 devops-python-boilerplate`
