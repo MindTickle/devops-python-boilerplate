@@ -1,0 +1,5 @@
+{
+  "devops-python-boilerplate": {
+    "build_cmd": "echo currently_no_build_required"
+  }
+}
