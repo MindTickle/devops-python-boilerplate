@@ -28,5 +28,4 @@ jobs:
         mkdir -p ~/.kube
         aws s3 cp s3://devops-heimdall-state-store/tracks/icarus/icarus-heimdall-kube-config ~/.kube/config
         helm ls devops-python-boilerplate-icarus --tiller-namespace helm
-        helm upgrade devops-python-boilerplate-icarus devops-python-boilerplate --namespace=icarus --set track.project.image.tag=0.0.59-devops-test --dry-run --debug --tiller-namespace helm
-        
+        helm upgrade devops-python-boilerplate-icarus tracks/icarus/projects/devops-python-boilerplate --namespace=icarus --set track.project.image.tag=0.0.59-devops-test --dry-run --debug --tiller-namespace helm
