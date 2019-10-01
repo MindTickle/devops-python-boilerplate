@@ -1,0 +1,37 @@
+{{- if .Values.ingress  }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    {{- if .Values.ingress.annotations}}
+    kubernetes.io/ingress.class: "{{ .Values.ingress.annotations.ingressClass }}"
+    {{- if .Values.ingress.annotations.protocol}}
+    ingress.kubernetes.io/protocol: "{{ .Values.ingress.annotations.protocol }}"
+    {{- end}}
+    {{- end}}
+    {{- if .Values.ingress.ssl}}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    {{- end}}
+  labels:
+    project: "{{ .Values.labels.app }}"
+    role: ingress
+  name: "{{ .Values.ingress.name }}"
+spec:
+  {{- $Name := .Values.labels.app }}
+  rules:
+  {{- range .Values.ingress.rules }}
+  - host: "{{ .host }}"
+    http:
+      paths:
+      - backend:
+          serviceName: {{ $Name }}
+          servicePort: {{ .port }}
+  {{- end }}
+  {{- if .Values.ingress.ssl}}
+  tls:
+  - hosts:
+    {{- range .Values.ingress.tls_enabled_rules }}
+    - "{{ . }}"
+    {{- end }}
+  {{- end}}
+{{- end}}

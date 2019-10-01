@@ -1,0 +1,5 @@
+dependencies:
+        - alias: project
+          name: default-service-template
+          repository: file://../../default-service-template
+          version: '>=0.1.0'

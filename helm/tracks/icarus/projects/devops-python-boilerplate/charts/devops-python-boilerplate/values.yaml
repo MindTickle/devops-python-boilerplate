@@ -1,0 +1,22 @@
+project:
+  app: devops-python-boilerplate
+  command:
+    enabled: false
+  iamrole: arn:aws:iam::191195949309:role/mtAppDefaultRole
+  image:
+    pullPolicy: IfNotPresent
+    repository: 191195949309.dkr.ecr.ap-southeast-1.amazonaws.com/devops-python-boilerplate
+    tag: '# place image tag here'
+  labels:
+    app: devops-python-boilerplate
+    owner: devops
+    project: devops-python-boilerplate
+    region: '# fill track region'
+    role: service
+    track: '# fill track name'
+    track_type: '# fill track type'
+  logShipper:
+    enabled: false
+  noderole: app
+  replicaCount: 1
+  repositoryUri: 191195949309.dkr.ecr.ap-southeast-1.amazonaws.com/devops-python-boilerplate

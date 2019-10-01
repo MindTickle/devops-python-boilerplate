@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: "{{ .Values.labels.app }}"
+    owner: "{{ .Values.labels.owner }}"
+    project: "{{ .Values.labels.project }}"
+    role: "{{ .Values.labels.role }}"
+  name: "{{ .Values.app }}"
+spec:
+  ports:
+    {{- range .Values.ports }}
+    - name: {{ .name}}
+      port: {{ .port }}
+      protocol: {{ .protocol }}
+      targetPort: {{ .target_port }}
+    {{- end }}
+  selector:
+    app: "{{ .Values.labels.app }}"
+    owner: "{{ .Values.labels.owner }}"
+    project: "{{ .Values.labels.project }}"
+    role: "{{ .Values.labels.role }}"
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

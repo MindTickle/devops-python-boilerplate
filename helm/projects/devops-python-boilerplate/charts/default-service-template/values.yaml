@@ -1,0 +1,143 @@
+# Default values for admin-tools.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# ---------------- start --------------
+
+#app: <name of project>
+noderole: app
+replicaCount: 1
+## -- namespace should be track name
+## namespace: icarus
+
+#iamrole: <aws iamrole>
+
+#image:
+#  repository: <image repo path>
+#  tag: <image tag>
+#  pullPolicy: IfNotPresent
+
+#labels:
+#  app: <app-name>
+#  owner: <owner>
+#  project: <project-name>
+#  role: job
+#  track: <track-name>
+#  region: <region>
+#  track_type: <track_type> #ex-development
+
+## -- Add resources carefully as per requirement
+resources:
+  limits:
+    cpu: 200m
+    memory: 300Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+#configmaps:
+#  project_configmap: admin-feeder-config
+#  assets_configmap: track-assets-config
+
+## -- if you want to override docker entry point then you can specified by using command
+## -- enable command by making "enabled=true" and add commands
+## -- ex - command: ['/bin/bash','file_name']
+command:
+  enabled: false
+  command: []
+
+spec:
+  minReadySeconds: 5
+  activeDeadlineSeconds: 600
+  terminationGracePeriodSeconds: 60
+  backoffLimit: 6
+  completions: 1
+  parallelism: 1
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  terminationMessagePath: /dev/termination-log
+  terminationMessagePolicy: File
+  volumeMounts:
+    mountPath: /logs
+    name: logs
+  volumes:
+    name: logs
+
+## -- log shipper, only be used by dev-ops team
+logShipper:
+  enabled: true
+  name: log-shipper
+  configMapRef:
+    name: log-shipper-config
+  image:
+    repository: 191195949309.dkr.ecr.ap-southeast-1.amazonaws.com/devops/log-shipper:applications
+    pullPolicy: Always
+  resources:
+    limits:
+      cpu: 120m
+      memory: 120Mi
+    requests:
+      cpu: 80m
+      memory: 90Mi
+  terminationMessagePath: /dev/termination-log
+  terminationMessagePolicy: File
+  volumeMounts:
+    mountPath: /logs
+    name: logs
+
+## -- aws log shipper, only to be used by dev-ops team
+AwslogShipper:
+  enabled: false
+  name: aws-logs-shipper
+  configMapRef:
+    name: aws-logs-shipper-config
+  image:
+    repository: 191195949309.dkr.ecr.ap-southeast-1.amazonaws.com/aws-logs-shipper:latest
+    pullPolicy: Always
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 80m
+      memory: 80Mi
+  terminationMessagePath: /dev/termination-log
+  terminationMessagePolicy: File
+  volumeMounts:
+    mountPath: /logs
+    name: logs
+
+# ingress:
+  # name: <ingress-name> ex- allaboard-internal-ingress
+  # host: <ingress-value> ex- aa.internal.icarus.mindtickle.com
+  # port: 80
+  # visibility: internal/external
+  # annotations:
+    # ingressClass: nginx
+    # protocol: h2c 
+#    as of now ingress protocol annotation to be used for grpc ingresses  
+
+hpa:
+  enabled: false
+  avgCPUUtilization: 80
+  avgMemoryUtilization: 80
+  minReplica: 2
+  maxReplica: 4
+
+AWS_METADATA_SERVICE_NUM_ATTEMPTS: 4
+AWS_METADATA_SERVICE_TIMEOUT: 60
+
+livenessProbe:
+  failureThreshold: 3
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+  initialDelaySeconds: 60
+
+readinessProbe:
+  failureThreshold: 3
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+  initialDelaySeconds: 60

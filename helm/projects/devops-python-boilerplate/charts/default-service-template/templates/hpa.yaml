@@ -1,0 +1,25 @@
+{{- if .Values.hpa }}
+{{- if .Values.hpa.enabled }}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    autoscaling.alpha.kubernetes.io/metrics: '[{"type":"Resource","resource":{"name":"memory","targetAverageUtilization":{{ .Values.hpa.avgMemoryUtilization }}}}]'
+  creationTimestamp: null
+  labels:
+    app: "{{ .Values.labels.app }}"
+    owner: "{{ .Values.labels.owner }}"
+    project: "{{ .Values.labels.project }}"
+    role: "{{ .Values.labels.role }}"
+    track: "{{ .Values.labels.track }}"
+  name: "{{ .Values.app }}"
+spec:
+  maxReplicas: {{ .Values.hpa.maxReplica }}
+  minReplicas: {{ .Values.hpa.minReplica }}
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: "{{ .Values.app }}"
+  targetCPUUtilizationPercentage: {{ .Values.hpa.avgCPUUtilization }}
+{{- end}}
+{{- end}}
