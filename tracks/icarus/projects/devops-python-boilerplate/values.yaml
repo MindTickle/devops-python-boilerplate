@@ -1,0 +1,55 @@
+track:
+  project:
+    AWS_METADATA_SERVICE_NUM_ATTEMPTS: '4'
+    AWS_METADATA_SERVICE_TIMEOUT: '60'
+    app: devops-python-boilerplate
+    AwslogShipper:
+      enabled: false
+    command:
+      enabled: false
+    configmaps:
+      assets_configmap: track-assets-config
+      project_configmap: devops-python-boilerplate-config
+    hpa:
+      avgCPUUtilization: '70'
+      avgMemoryUtilization: '70'
+      enabled: true
+      maxReplica: 6
+      minReplica: 1
+    iamrole: arn:aws:iam::191195949309:role/mtAppDefaultRole
+    image:
+      pullPolicy: IfNotPresent
+      repository: 191195949309.dkr.ecr.ap-southeast-1.amazonaws.com/devops-python-boilerplate
+      tag: 0.0.14-icarus
+    ingress:
+      annotations:
+        ingressClass: nginx
+      name: devops-python-boilerplate-internal-ingress
+      rules:
+      - host: python-boilerplate
+        port: 8000
+      service: devops-python-boilerplate
+      visibility: internal
+    labels:
+      app: devops-python-boilerplate
+      owner: devops
+      project: devops-python-boilerplate
+      region: ap-southeast-1
+      role: service
+      track: icarus
+      track_type: development
+    logShipper:
+      enabled: false
+    noderole: dev
+    ports:
+    - name: http-0
+      port: 8000
+      protocol: TCP
+      target_port: 8000
+    protocol: http
+    replicaCount: 1
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 1
+      type: RollingUpdate

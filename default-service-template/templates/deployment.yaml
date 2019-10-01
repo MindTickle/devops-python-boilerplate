@@ -1,0 +1,230 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  generation: 1
+  labels:
+    app: "{{ .Values.labels.app }}"
+    owner: "{{ .Values.labels.owner }}"
+    project: "{{ .Values.labels.project }}"
+    role: "{{ .Values.labels.role }}"
+    track: "{{ .Values.labels.track }}"
+  name: "{{ .Values.app }}"
+spec:
+  minReadySeconds: {{ .Values.spec.minReadySeconds }}
+  progressDeadlineSeconds: {{ .Values.spec.activeDeadlineSeconds }}
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: "{{ .Values.labels.app }}"
+      owner: "{{ .Values.labels.owner }}"
+      project: "{{ .Values.labels.project }}"
+      role: "{{ .Values.labels.role }}"
+      track: "{{ .Values.labels.track }}"
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        iam.amazonaws.com/role: "{{ .Values.iamrole }}"
+      labels:
+        app: "{{ .Values.labels.app }}"
+        owner: "{{ .Values.labels.owner }}"
+        project: "{{ .Values.labels.project }}"
+        role: "{{ .Values.labels.role }}"
+        track: "{{ .Values.labels.track }}"
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: role
+                operator: In
+                values:
+                - "{{ .Values.noderole }}"
+      containers:
+      - env:
+        - name: APPLICATION
+          value: "{{ .Values.labels.app }}"
+        - name: TRACK
+          value: "{{ .Values.labels.track }}"
+        - name: REGION
+          value: "{{ .Values.labels.region }}"
+        - name: TRACK_TYPE
+          value: "{{ .Values.labels.track_type }}"
+        - name: AWS_REGION
+          value: "{{ .Values.labels.region }}"
+        - name: AWS_METADATA_SERVICE_NUM_ATTEMPTS
+          value: "{{ .Values.AWS_METADATA_SERVICE_NUM_ATTEMPTS}}"
+        - name: AWS_METADATA_SERVICE_TIMEOUT
+          value: "{{ .Values.AWS_METADATA_SERVICE_TIMEOUT}}"
+        envFrom:
+        {{- if .Values.configmaps }}
+        {{- if .Values.configmaps.project_configmap }}
+        - configMapRef:
+            name : "{{ .Values.configmaps.project_configmap }}"
+        {{- end}}
+        {{- if .Values.configmaps.assets_configmap }}
+        - configMapRef:
+            name: "{{ .Values.configmaps.assets_configmap }}"
+        {{- end }}
+        {{- end }}
+        {{- if .Values.command.enabled}}
+        command:
+        {{- range .Values.command.command }}
+        - {{ . }}
+        {{- end }}
+        {{- end}}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+        {{- if .Values.healthcheck}}
+        {{- if eq .Values.livenessProbe.healthchecktype "http"}}
+        livenessProbe:
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          httpGet:
+            path: "{{ .Values.livenessProbe.httpGet.path }}"
+            port: {{ .Values.livenessProbe.httpGet.port }}
+            scheme: "{{ .Values.livenessProbe.httpGet.scheme }}"
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+        {{- end }}
+        {{- if eq .Values.livenessProbe.healthchecktype "exec"}}
+        livenessProbe:
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          exec:
+            command:
+              {{- range .Values.livenessProbe.exec.command }}
+              - {{ . }}
+              {{- end }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+        {{- end }}
+        {{- end}}
+        {{- if .Values.readiness}}
+        {{- if eq .Values.readinessProbe.readinesschecktype "http"}}
+        readinessProbe:
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          httpGet:
+            path: "{{ .Values.readinessProbe.httpGet.path }}"
+            port: {{ .Values.readinessProbe.httpGet.port }}
+            scheme: "{{ .Values.readinessProbe.httpGet.scheme }}"
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+        {{- end }}
+        {{- if eq .Values.readinessProbe.readinesschecktype "exec"}}
+        readinessProbe:
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          exec:
+            command:
+            {{- range .Values.readinessProbe.exec.command }}
+            - {{ . }}
+            {{- end }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+        {{- end }}
+        {{- end }}
+        name: "{{ .Values.app }}"
+        ports:
+        {{- range .Values.ports }}
+        - containerPort: {{ .target_port }}
+          name: {{ .name}}
+          protocol: {{ .protocol }}
+        {{- end }}
+        resources:
+          limits:
+            cpu: "{{ .Values.resources.limits.cpu }}"
+            memory: "{{ .Values.resources.limits.memory }}"
+          requests:
+            cpu: "{{ .Values.resources.requests.cpu }}"
+            memory: "{{ .Values.resources.requests.memory }}"
+        securityContext: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /logs
+          name: logs
+      {{- if .Values.logShipper.enabled}}
+      - env:
+        - name: APPLICATION
+          value: "{{ .Values.labels.app }}"
+        - name: TRACK
+          value: "{{ .Values.labels.track }}"
+        - name: REGION
+          value: "{{ .Values.labels.region }}"
+        {{- if .Values.logShipper.FILEBEAT_LOG_PATHS }}
+        - name: FILEBEAT_LOG_PATHS
+          value: "{{ .Values.logShipper.FILEBEAT_LOG_PATHS}}"
+        {{- end }}
+        envFrom:
+        - configMapRef:
+            name: "{{ .Values.logShipper.configMapRef.name }}"
+        image: "{{ .Values.logShipper.image.repository }}"
+        imagePullPolicy: "{{ .Values.logShipper.image.pullPolicy }}"
+        name: "{{ .Values.logShipper.name }}"
+        resources:
+          limits:
+            cpu: "{{ .Values.logShipper.resources.limits.cpu }}"
+            memory: "{{ .Values.logShipper.resources.limits.memory }}"
+          requests:
+          requests:
+            cpu: "{{ .Values.logShipper.resources.requests.cpu }}"
+            memory: "{{ .Values.logShipper.resources.requests.memory }}"
+        securityContext: {}
+        terminationMessagePath: "{{ .Values.logShipper.terminationMessagePath }}"
+        terminationMessagePolicy: "{{ .Values.logShipper.terminationMessagePolicy }}"
+        volumeMounts:
+        - mountPath: "{{ .Values.logShipper.volumeMounts.mountPath }}"
+          name: "{{ .Values.logShipper.volumeMounts.name }}"
+      {{- end }}
+      {{- if .Values.AwslogShipper.enabled}}
+      - env:
+          - name: APPLICATION
+            value: "{{ .Values.labels.app }}"
+          - name: TRACK
+            value: "{{ .Values.labels.track }}"
+          - name: REGION
+            value: "{{ .Values.labels.region }}"
+        envFrom:
+          - configMapRef:
+              name: "{{ .Values.AwslogShipper.configMapRef.name }}"
+        image: "{{ .Values.AwslogShipper.image.repository }}"
+        imagePullPolicy: "{{ .Values.AwslogShipper.image.pullPolicy }}"
+        name: "{{ .Values.AwslogShipper.name }}"
+        resources:
+          limits:
+            cpu: "{{ .Values.AwslogShipper.resources.limits.cpu }}"
+            memory: "{{ .Values.AwslogShipper.resources.limits.memory }}"
+          requests:
+          requests:
+            cpu: "{{ .Values.AwslogShipper.resources.requests.cpu }}"
+            memory: "{{ .Values.AwslogShipper.resources.requests.memory }}"
+        securityContext: {}
+        terminationMessagePath: "{{ .Values.AwslogShipper.terminationMessagePath }}"
+        terminationMessagePolicy: "{{ .Values.AwslogShipper.terminationMessagePolicy }}"
+        volumeMounts:
+          - mountPath: "{{ .Values.AwslogShipper.volumeMounts.mountPath }}"
+            name: "{{ .Values.AwslogShipper.volumeMounts.name }}"
+      {{- end }}
+      dnsConfig:
+        options:
+        - name: single-request-reopen
+      dnsPolicy: "{{ .Values.spec.dnsPolicy }}"
+      restartPolicy: "{{ .Values.spec.restartPolicy }}"
+      schedulerName: "{{ .Values.spec.schedulerName }}"
+      securityContext: {}
+      terminationGracePeriodSeconds: {{ .Values.spec.terminationGracePeriodSeconds }}
+      volumes:
+      - emptyDir: {}
+        name: "{{ .Values.spec.volumes.name }}"
