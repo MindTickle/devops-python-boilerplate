@@ -11,4 +11,4 @@ jobs:
     - uses: actions/checkout@v1
     - name: Run a multi-line script
       run: |
-	docker build -t devops-python-boilerplate .
+      docker build -t devops-python-boilerplate .
