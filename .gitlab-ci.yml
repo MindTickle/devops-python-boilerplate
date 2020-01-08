@@ -1,8 +1,8 @@
 stages:
-  - predev-build
-  - unit-test
-  - integration-test
-  - version
+#  - predev-build
+#  - unit-test
+#  - integration-test
+#  - version
   - build
   - deploy-dev
   - rollback-dev
