@@ -1,8 +1,4 @@
 stages:
-#  - predev-build
-#  - unit-test
-#  - integration-test
-#  - version
   - build
   - deploy-dev
   - rollback-dev
@@ -16,18 +12,6 @@ stages:
   - delete-prod
 
 include:
-  - project: 'call-ai/gitlab-ci-cd-templates'
-    file: '/build-predev-template.yml'
-
-  - project: 'call-ai/gitlab-ci-cd-templates'
-    file: '/test-unit-template.yml'
-
-  - project: 'call-ai/gitlab-ci-cd-templates'
-    file: '/test-integration-template.yml'
-
-  - project: 'call-ai/gitlab-ci-cd-templates'
-    file: '/version-template.yml'
-
   - project: 'call-ai/gitlab-ci-cd-templates'
     file: '/build-template.yml'
 
