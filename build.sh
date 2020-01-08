@@ -12,6 +12,7 @@
 rm -rf build/
 mkdir -p build
 
-echo "hello world! !!!!!!"
+echo "helloio world! !!!!!!"
+
 
 cp server.py build/server.py
