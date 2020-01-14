@@ -1,12 +1,19 @@
-FROM python:3.6
+FROM python:3.6 as base
+
+FROM base as builder
 
 WORKDIR /src/app
 
 COPY ./app/requirements.txt ./requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip install -t /install -r /requirements.txt
+
+FROM base
+
+COPY --from=builder /install /usr/local/lib/python3.7/site-packages/
 
 COPY ./entrypoint.sh /src/entrypoint.sh
+
 RUN chmod +x /src/entrypoint.sh
 
 COPY ./app .
