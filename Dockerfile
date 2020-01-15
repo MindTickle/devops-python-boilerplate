@@ -6,7 +6,7 @@ WORKDIR /src/app
 
 COPY ./app/requirements.txt ./requirements.txt
 
-RUN pip install -t /install -r /requirements.txt
+RUN pip install -t /install -r ./requirements.txt
 
 FROM base
 
