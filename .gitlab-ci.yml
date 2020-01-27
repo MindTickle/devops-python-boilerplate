@@ -1,8 +1,8 @@
 stages:
   - predev-build
+  - deploy-track
   - unit-test
   - integration-test
-  - deploy-track
   - version
   - build
   - deploy-dev
@@ -21,13 +21,13 @@ include:
     file: '/build-predev-template.yml'
 
   - project: 'mindtickle/mindtickle-devops/ci-cd-templates'
+    file: '/deploy-track-template.yml'
+
+  - project: 'mindtickle/mindtickle-devops/ci-cd-templates'
     file: '/test-unit-template.yml'
 
   - project: 'mindtickle/mindtickle-devops/ci-cd-templates'
     file: '/test-integration-template.yml'
-
-  - project: 'mindtickle/mindtickle-devops/ci-cd-templates'
-    file: '/deploy-track-template.yml'
 
   - project: 'mindtickle/mindtickle-devops/ci-cd-templates'
     file: '/version-template.yml'
