@@ -12,6 +12,8 @@ FROM base
 
 COPY --from=builder /install /usr/local/lib/python3.7/site-packages/
 
+WORKDIR /src/app
+
 COPY ./entrypoint.sh /src/entrypoint.sh
 
 RUN chmod +x /src/entrypoint.sh
