@@ -1,5 +1,7 @@
 import logging
 from flask import Flask, jsonify
+from ddtrace import patch_all
+patch_all()
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s',
                     datefmt='%a, %d %b %Y %H:%M:%S')
