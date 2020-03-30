@@ -6,11 +6,13 @@ WORKDIR /src/app
 
 COPY ./app/requirements.txt ./requirements.txt
 
-RUN pip install -t /install -r ./requirements.txt
+RUN pip install -r ./requirements.txt
 
-FROM base
-
-COPY --from=builder /install /usr/local/lib/python3.7/site-packages/
+#FROM base
+#
+#WORKDIR /src/app
+#
+#COPY --from=builder /install /usr/local/lib/python3.7/site-packages/
 
 COPY ./entrypoint.sh /src/entrypoint.sh
 
