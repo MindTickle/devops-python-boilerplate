@@ -1,4 +1,4 @@
-# Devops Python Boilerplate
+# This is maintained by Devops team: Devops Python Boilerplate
 
 ## About
 
