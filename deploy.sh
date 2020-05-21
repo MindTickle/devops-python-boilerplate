@@ -1,5 +1,6 @@
-sudo apt update
-sudo apt install awscli
+pyenv global 3.7.1
+pip install -U pip
+pip install awscli
 
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 chmod +x ./kubectl
