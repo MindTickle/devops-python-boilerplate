@@ -20,4 +20,3 @@ VOLUME /logs
 
 EXPOSE 8000
 ENTRYPOINT ["/src/entrypoint.sh"]
-
