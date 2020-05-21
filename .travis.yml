@@ -5,11 +5,26 @@ services:
 
 before_install:
   - docker build -t python-img .
-  - docker run -d --name python-boilerplate -p 127.0.0.1:80:8000 python-img
-  - docker ps -a
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - chmod +x ./kubectl
+  - sudo mv ./kubectl /usr/local/bin/kubectl
+  - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh
+  - chmod 700 get_helm.sh
+  - sudo ./get_helm.sh
 
-script:
-  - ls
-  - sleep 30
-  - docker exec -it python-boilerplate pytest
-  - curl localhost:80
+jobs:
+  include:
+    - stage: build
+      script: build_image.sh
+    - stage: test
+      script:
+        - docker run -d --name python-boilerplate -p 127.0.0.1:80:8000 python-img
+        - sleep 10
+        - docker exec -it python-boilerplate pytest
+        - curl localhost:80
+    - stage: config
+      script: set_config.sh
+    - stage: deploy
+      script:
+        - echo "helm here"
+        - helm version
