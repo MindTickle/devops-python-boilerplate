@@ -1,4 +1,4 @@
-language: minimal
+#language: minimal
 
 services:
   - docker
@@ -11,5 +11,5 @@ before_install:
 script:
   - ls
   - sleep 30
+  - pytest
   - curl localhost:80
-  - curl localhost:8000
