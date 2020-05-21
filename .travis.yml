@@ -15,7 +15,7 @@ before_install:
 jobs:
   include:
     - stage: build
-      script: build_image.sh
+      script: bash build_image.sh
     - stage: test
       script:
         - docker run -d --name python-boilerplate -p 127.0.0.1:80:8000 python-img
@@ -23,7 +23,7 @@ jobs:
         - docker exec -it python-boilerplate pytest
         - curl localhost:80
     - stage: config
-      script: set_config.sh
+      script: bash set_config.sh
     - stage: deploy
       script:
         - echo "helm here"
