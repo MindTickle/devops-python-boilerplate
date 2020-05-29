@@ -7,6 +7,7 @@ jobs:
   include:
     - stage: build
       script: bash build_image.sh
+      if: type != api
     - stage: test
       script:
         - bash build_image.sh
