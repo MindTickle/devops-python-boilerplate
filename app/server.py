@@ -6,10 +6,12 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(m
 
 app = Flask(__name__)
 
+def hello():
+    return {'message': 'Hello, World!'}
 
 @app.route("/")
-def hello():
-    return jsonify({'message': 'Hello, World'})
+def hello_route():
+    return jsonify(hello())
 
 
 if __name__ == '__main__':
