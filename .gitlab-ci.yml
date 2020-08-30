@@ -7,6 +7,11 @@ PythonBBuild:
   variables:
     PROJECT_NAME: "devops-python-boilerplate"
 
+PythonBBuildHeimdall:
+  extends: .build-heimdall
+  variables:
+    PROJECT_NAME: "devops-python-boilerplate"
+
 PythonBAssetDeploy:
   extends: .asset-deploy
   variables:
@@ -14,6 +19,11 @@ PythonBAssetDeploy:
 
 PythonBConfigDeploy:
   extends: .config-deploy
+  variables:
+    PROJECT_NAME: "devops-python-boilerplate"
+
+PythonBDeployHeimdall:
+  extends: .artifact-deploy-heimdall
   variables:
     PROJECT_NAME: "devops-python-boilerplate"
 
