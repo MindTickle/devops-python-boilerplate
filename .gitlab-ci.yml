@@ -1,23 +1,23 @@
 include:
   - project: 'mindtickle/devops/devops-ci-cd-templates'
-    file: '/ci-cd-k8s/ci-cd.yml'
+    file: '/mirrored/ci-cd.yml'
 
 PythonBBuild:
   extends: .build
   variables:
-    PROJECT: "devops-python-boilerplate"
+    PROJECT_NAME: "devops-python-boilerplate"
 
 PythonBAssetDeploy:
   extends: .asset-deploy
   variables:
-    PROJECT: "devops-python-boilerplate"
+    PROJECT_NAME: "devops-python-boilerplate"
 
 PythonBConfigDeploy:
   extends: .config-deploy
   variables:
-    PROJECT: "devops-python-boilerplate"
+    PROJECT_NAME: "devops-python-boilerplate"
 
 PythonBDeploy:
   extends: .artifact-deploy
   variables:
-    PROJECT: "devops-python-boilerplate"
+    PROJECT_NAME: "devops-python-boilerplate"
