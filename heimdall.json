@@ -4,8 +4,5 @@
   },
   "devops-python-boilerplate-standalone": {
     "build_cmd": "echo currently_no_build_required"
-  },
-  "content-event-pipeline": {
-    "build_cmd": "echo currently_no_build_required"
   }
 }

@@ -2,112 +2,32 @@ include:
   - project: 'mindtickle/devops/devops-ci-cd-templates'
     file: '/mirrored/ci-cd.yml'
 
-content-event-pipeline-build:
-  extends: .build
-  variables:
-    PROJECT_NAME: "content-event-pipeline"
-
-content-event-pipeline-build-heimdall:
-  extends: .build-heimdall
-  variables:
-    PROJECT_NAME: "content-event-pipeline"
-
-content-event-pipeline-asset-deploy:
-  extends: .asset-deploy
-  variables:
-    PROJECT_NAME: "content-event-pipeline"
-
-content-event-pipeline-config-deploy:
-  extends: .config-deploy
-  variables:
-    PROJECT_NAME: "content-event-pipeline"
-
-content-event-pipeline-deploy-heimdall:
-  extends: .artifact-deploy-heimdall
-  variables:
-    PROJECT_NAME: "content-event-pipeline"
-
-content-event-pipeline-deploy:
-  extends: .artifact-deploy
-  variables:
-    PROJECT_NAME: "content-event-pipeline"
-
-event-pipeline-build:
-  extends: .build
-  variables:
-    PROJECT_NAME: "event-pipeline"
-
-event-pipeline-build-heimdall:
-  extends: .build-heimdall
-  variables:
-    PROJECT_NAME: "event-pipeline"
-
-event-pipeline-asset-deploy:
-  extends: .asset-deploy
-  variables:
-    PROJECT_NAME: "event-pipeline"
-
-event-pipeline-config-deploy:
-  extends: .config-deploy
-  variables:
-    PROJECT_NAME: "event-pipeline"
-
-event-pipeline-deploy-heimdall:
-  extends: .artifact-deploy-heimdall
-  variables:
-    PROJECT_NAME: "event-pipeline"
-
-event-pipeline-deploy:
-  extends: .artifact-deploy
-  variables:
-    PROJECT_NAME: "event-pipeline"
-
-devops-python-boilerplate-standalone-build-heimdall:
-  extends: .build-heimdall
-  variables:
-    PROJECT_NAME: "devops-python-boilerplate-standalone"
-
-devops-python-boilerplate-standalone-asset-deploy:
-  extends: .asset-deploy
-  variables:
-    PROJECT_NAME: "devops-python-boilerplate-standalone"
-
-devops-python-boilerplate-standalone-config-deploy:
-  extends: .config-deploy
-  variables:
-    PROJECT_NAME: "devops-python-boilerplate-standalone"
-
-devops-python-boilerplate-standalone-deploy-heimdall:
-  extends: .artifact-deploy-heimdall
-  variables:
-    PROJECT_NAME: "devops-python-boilerplate-standalone"
-
-devops-python-boilerplate-build:
+PythonBBuild:
   extends: .build
   variables:
     PROJECT_NAME: "devops-python-boilerplate"
 
-devops-python-boilerplate-build-heimdall:
+PythonBBuildHeimdall:
   extends: .build-heimdall
   variables:
     PROJECT_NAME: "devops-python-boilerplate"
 
-devops-python-boilerplate-asset-deploy:
+PythonBAssetDeploy:
   extends: .asset-deploy
   variables:
     PROJECT_NAME: "devops-python-boilerplate"
 
-devops-python-boilerplate-config-deploy:
+PythonBConfigDeploy:
   extends: .config-deploy
   variables:
     PROJECT_NAME: "devops-python-boilerplate"
 
-devops-python-boilerplate-deploy-heimdall:
+PythonBDeployHeimdall:
   extends: .artifact-deploy-heimdall
   variables:
     PROJECT_NAME: "devops-python-boilerplate"
 
-devops-python-boilerplate-deploy:
+PythonBDeploy:
   extends: .artifact-deploy
   variables:
     PROJECT_NAME: "devops-python-boilerplate"
