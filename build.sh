@@ -8,10 +8,11 @@
 #    "build_cmd": "bash build.sh"
 #  }
 #}
+#
 
 rm -rf build/
 mkdir -p build
 
-echo "Hello World !!! !! !!! !!!"
+echo "hello world !!! !!"
 
 cp server.py build/server.py

@@ -1,0 +1,23 @@
+dist: bionic
+
+services:
+  - docker
+
+jobs:
+  include:
+    - stage: build
+      script: bash build_image.sh
+      if: type != api
+    - stage: test
+      script:
+        - bash build_image.sh
+        - docker run -d --name python-boilerplate -p 127.0.0.1:80:8000 python-img
+        - sleep 10
+        - docker exec -it python-boilerplate pytest
+        - curl localhost:80
+    - stage: config
+      script: bash set_config.sh
+    - stage: deploy
+      script:
+        - echo "helm here"
+        - bash deploy.sh
