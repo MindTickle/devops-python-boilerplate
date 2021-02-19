@@ -12,7 +12,7 @@ This project comes preconfigured with the following:
 * `heimdall.json` and `build.sh`
 
 
-## Running Locally via Docker
+## Running Locally via Docker..
 
 * `docker build -t devops-python-boilerplate .`
 * `docker run -p 8000:8000 devops-python-boilerplate`
