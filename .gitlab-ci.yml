@@ -97,6 +97,11 @@ devops-python-boilerplate-asset-deploy:
   variables:
     PROJECT_NAME: "devops-python-boilerplate"
 
+devops-python-boilerplate-statefultset-automation:
+  extends: .statefulset-automation
+  variables:
+    PROJECT_NAME: "devops-python-boilerplate"
+
 devops-python-boilerplate-config-deploy:
   extends: .config-deploy
   variables:
